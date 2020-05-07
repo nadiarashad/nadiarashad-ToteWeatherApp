@@ -1,17 +1,11 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, Image, Button } from "react-native";
+
 import { API_KEY } from "nadiaToteWeather/utils/WeatherApiKey.js";
 import Axios from "axios";
-import { FarenheitToCelsius } from "nadiaToteWeather/utils/FarenheitToCelsius.js";
+import SearchBar from "nadiaToteWeather/components/SearchBar.js";
+
+const remote = "nadiaToteWeather/components/Weather.js";
 
 class Weather extends Component {
   state = {
@@ -23,7 +17,42 @@ class Weather extends Component {
     weatherDescription: "",
     error: null,
     image: "",
+    searched: false,
+    isLoading: false,
+    currentLocation: "",
   };
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.fetchWeather(position.coords.latitude, position.coords.longitude);
+      },
+      (error) => {
+        this.setState({
+          error: "Error Getting Weather Conditions",
+        });
+      }
+    );
+  }
+
+  fetchWeather(lat = 25, lon = 25) {
+    fetch(
+      `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=metric`
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("json of all weather", json);
+        this.setState({
+          temperature: json.main.temp,
+          weatherCondition: json.weather[0].main,
+          allWeatherInfo: json.main,
+          currentLocation: json.name,
+          isLoading: false,
+          weatherDescription: json.weather[0].description,
+          image: json.weather[0].icon,
+        });
+      });
+  }
 
   handleInput = (locationToSearch) => {
     console.log("handling input", locationToSearch);
@@ -34,10 +63,6 @@ class Weather extends Component {
     const { enteredLocation } = this.state;
 
     this.fetchNewLocationWeather(enteredLocation);
-
-    const newTemp = FarenheitToCelsius(170);
-
-    console.log("NEWWWWWWWWWWWWW TEMP", newTemp);
   };
 
   fetchNewLocationWeather = (enteredLocation) => {
@@ -59,6 +84,7 @@ class Weather extends Component {
           weatherDescription: data.weather[0].weatherDescription,
           image: data.weather[0].icon,
           enteredLocation: "",
+          searched: true,
         });
       })
       .catch((err) => {
@@ -68,41 +94,75 @@ class Weather extends Component {
       });
   };
 
+  handleCurrentWeather = () => {
+    this.setState({ searched: false });
+  };
+
   render() {
-    const { enteredLocation } = this.state;
-    console.log(this.props.weatherDescription);
+    const {
+      enteredLocation,
+      searched,
+      temperature,
+      weatherCondition,
+      image,
+      newLocation,
+      currentLocation,
+      weatherDescription,
+    } = this.state;
 
     console.log("STATEEEEEEEEEEEEEEEEEEEEEEEE", this.state);
+
     return (
       <View style={styles.weatherContainer}>
-        <View style={styles.searchbar}>
-          <View style={{ flexDirection: "row" }}>
-            <TextInput
-              style={styles.inputContainer}
-              placeholder="Enter location"
-              value={enteredLocation}
-              onChangeText={(location) => this.handleInput(location)}
-              ref={"textInput1"}
+        <SearchBar
+          handleInput={this.handleInput}
+          handleSearch={this.handleSearch}
+          enteredLocation={enteredLocation}
+        />
+
+        {searched ? (
+          <View style={styles.headerContainer}>
+            <Text style={styles.location}>{newLocation} </Text>
+            <Image
+              style={{ width: 110, height: 110 }}
+              source={{
+                uri: `http://openweathermap.org/img/wn/${image}@2x.png`,
+              }}
             />
 
-            <Button title="Search" onPress={this.handleSearch} />
+            <Text style={styles.tempText}>
+              {Math.ceil(temperature - 273.15)}˚C
+            </Text>
           </View>
-        </View>
-        <View style={styles.headerContainer}>
-          <Text>Current Location: {this.props.currentLocation} </Text>
-          <Image
-            style={{ width: 100, height: 100 }}
-            source={{
-              uri: `http://openweathermap.org/img/wn/${this.props.image}@2x.png`,
-            }}
-          />
+        ) : (
+          <View style={styles.headerContainer}>
+            <Text style={styles.location}>{currentLocation} </Text>
+            <Image
+              style={{ width: 110, height: 110 }}
+              source={{
+                uri: `http://openweathermap.org/img/wn/${image}@2x.png`,
+              }}
+            />
 
-          <Text style={styles.tempText}>{this.props.temperature}˚C</Text>
-        </View>
-        <View style={styles.bodyContainer}>
-          <Text style={styles.title}>{this.props.weatherDescription}</Text>
-          <Text style={styles.subtitle}></Text>
-        </View>
+            <Text style={styles.tempText}>{Math.ceil(temperature)}˚C</Text>
+          </View>
+        )}
+
+        {searched ? (
+          <View style={styles.bodyContainer}>
+            <Text style={styles.title}>{weatherCondition}</Text>
+            <Text style={styles.subtitle}></Text>
+            <Button
+              title="Back to current weather"
+              onPress={this.handleCurrentWeather}
+            ></Button>
+          </View>
+        ) : (
+          <View style={styles.bodyContainer}>
+            <Text style={styles.title}>{weatherDescription}</Text>
+            <Text style={styles.subtitle}>Humidity: </Text>
+          </View>
+        )}
       </View>
     );
   }
@@ -111,10 +171,15 @@ class Weather extends Component {
 const styles = StyleSheet.create({
   weatherContainer: {
     flex: 1,
-    backgroundColor: "pink",
   },
   searchbar: {
     padding: 40,
+  },
+  background: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   inputContainer: {
     width: "80%",
@@ -124,10 +189,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   location: {
-    padding: 10,
+    padding: 0,
     flex: 2,
     alignItems: "center",
     justifyContent: "center",
+    fontSize: 48,
+    color: "black",
   },
   headerContainer: {
     flex: 3,
@@ -136,7 +203,7 @@ const styles = StyleSheet.create({
   },
   tempText: {
     fontSize: 48,
-    color: "#fff",
+    color: "black",
   },
   bodyContainer: {
     flex: 4,
@@ -147,12 +214,68 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 48,
-    color: "#fff",
+    color: "black",
   },
   subtitle: {
     fontSize: 24,
-    color: "#fff",
+    color: "black",
   },
 });
 
 export default Weather;
+
+// return (
+//   <View style={styles.weatherContainer}>
+//     <SearchBar
+//       handleInput={this.handleInput}
+//       handleSearch={this.handleSearch}
+//       enteredLocation={enteredLocation}
+//     />
+
+//     {searched ? (
+//       <View style={styles.headerContainer}>
+//         <Text style={styles.location}>{newLocation} </Text>
+//         <Image
+//           style={{ width: 110, height: 110 }}
+//           source={{
+//             uri: `http://openweathermap.org/img/wn/${image}@2x.png`,
+//           }}
+//         />
+
+//         <Text style={styles.tempText}>
+//           {Math.ceil(temperature - 273.15)}˚C
+//             </Text>
+//       </View>
+//     ) : (
+//         <View style={styles.headerContainer}>
+//           <Text style={styles.location}>{this.props.currentLocation} </Text>
+//           <Image
+//             style={{ width: 110, height: 110 }}
+//             source={{
+//               uri: `http://openweathermap.org/img/wn/${this.props.image}@2x.png`,
+//             }}
+//           />
+
+//           <Text style={styles.tempText}>
+//             {Math.ceil(this.props.temperature)}˚C
+//             </Text>
+//         </View>
+//       )}
+
+//     {searched ? (
+//       <View style={styles.bodyContainer}>
+//         <Text style={styles.title}>{weatherCondition}</Text>
+//         <Text style={styles.subtitle}></Text>
+//         <Button
+//           title="Back to current weather"
+//           onPress={this.handleCurrentWeather}
+//         ></Button>
+//       </View>
+//     ) : (
+//         <View style={styles.bodyContainer}>
+//           <Text style={styles.title}>{this.props.weatherDescription}</Text>
+//           <Text style={styles.subtitle}>Humidity: </Text>
+//         </View>
+//       )}
+//   </View>
+// );
