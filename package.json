@@ -5,12 +5,18 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "mocha testing/spec.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
+    "chai": "^4.2.0",
+    "detox": "^16.4.1",
     "expo": "~37.0.3",
     "express": "^4.17.1",
+    "mocha": "^7.1.2",
+    "moment": "^2.25.3",
     "nodemon": "^2.0.3",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
@@ -28,5 +34,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "detox": {
+    "test-runner": "mocha",
+    "configurations": {
+      "ios.sim.debug": {
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/example.app",
+        "build": "xcodebuild -project ios/example.xcodeproj -scheme example -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "device": {
+          "type": "iPhone 11 Pro"
+        }
+      }
+    }
+  }
 }

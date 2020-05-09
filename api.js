@@ -1,8 +1,8 @@
 import Axios from "axios";
-import { API_KEY } from "nadiaToteWeather/utils/WeatherApiKey.js";
+import { API_KEY } from "./utils/WeatherApiKey";
 
 export const fetchNewWeather = (enteredLocation) => {
   return Axios.get(
-    `http://api.openweathermap.org/data/2.5/weather?q=${enteredLocation}&appid=${API_KEY}`
+    `https://api.openweathermap.org/data/2.5/weather?q=${enteredLocation}&appid=${API_KEY}`
   );
 };

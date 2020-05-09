@@ -22,6 +22,7 @@ const SearchBar = (props) => {
 const styles = StyleSheet.create({
   searchbar: {
     padding: 40,
+    // backgroundColor: "transparent",
   },
 
   inputContainer: {
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 7.5,
     flex: 1,
+    // backgroundColor: "transparent",
   },
   location: {
     padding: 0,
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 48,
     color: "black",
+    // backgroundColor: "transparent",
   },
 });
 export default SearchBar;

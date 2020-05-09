@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import Weather from "nadiaToteWeather/components/Weather.js";
+import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import Weather from "../nadiaToteWeather/components/Weather.js";
 
 export default class App extends React.Component {
   state = {
@@ -12,7 +12,12 @@ export default class App extends React.Component {
 
     return (
       <View style={styles.container}>
+        {/* <ImageBackground
+          source={require("./assets/sky.jpg")}
+          style={styles.backgroundImage}
+        > */}
         {isLoading ? <Text>Fetching The Weather</Text> : <Weather />}
+        {/* </ImageBackground> */}
       </View>
     );
   }
@@ -21,13 +26,11 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
+    // backgroundColor: "transparent",
   },
-  inputContainer: {
-    width: "80%",
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 7.5,
-    flex: 2,
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "stretch",
   },
 });
