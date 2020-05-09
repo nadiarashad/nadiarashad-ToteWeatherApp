@@ -1,17 +1,19 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, Button } from "react-native";
 import { kelvinChecker } from "../utils/KelvinChecker.js";
 import moment from "moment";
+import * as Font from "expo-font";
 
 const WeatherBody = (props) => {
   let ts = new Date();
 
   return (
     <View style={styles.bodyContainer}>
-      <Text style={styles.title}>{props.weatherCondition}</Text>
+      <Text style={styles.title}>Currently: {props.weatherCondition}</Text>
       <Text style={styles.subtitle}>
         Feels like: {kelvinChecker(props.allWeatherInfo.feels_like)}˚C
       </Text>
+
       <Text style={styles.subtitle}>
         Humidity: {props.allWeatherInfo.humidity}%
       </Text>
@@ -42,11 +44,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
 
-    color: "black",
+    fontFamily: "sans-serif",
+    color: "white",
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 24,
-    color: "black",
+    color: "white",
+    fontFamily: "sans-serif",
+    fontWeight: "bold",
   },
 });
 

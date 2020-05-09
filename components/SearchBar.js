@@ -27,11 +27,12 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     width: "80%",
-    borderColor: "black",
-    borderWidth: 1,
+    borderColor: "white",
+    borderWidth: 1.5,
     padding: 7.5,
     flex: 1,
-    // backgroundColor: "transparent",
+    color: "black",
+    backgroundColor: "white",
   },
   location: {
     padding: 0,
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     fontSize: 48,
-    color: "black",
+    color: "white",
     // backgroundColor: "transparent",
   },
 });

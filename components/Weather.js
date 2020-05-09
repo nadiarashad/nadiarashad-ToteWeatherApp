@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   View,
   Text,
@@ -140,56 +140,60 @@ class Weather extends Component {
           source={require("../assets/beach.jpg")}
           style={styles.backgroundImage}
         >
-          <SearchBar
-            handleInput={this.handleInput}
-            handleSearch={this.handleSearch}
-            enteredLocation={enteredLocation}
-          />
-
-          {searched ? (
-            <View style={styles.locationContainer}>
-              <Text style={styles.location}>{newLocation} </Text>
-            </View>
-          ) : (
-            <View style={styles.locationContainer}>
-              <Text style={styles.headerText}>{currentLocation} </Text>
-            </View>
-          )}
-          <View style={styles.headerContainer}>
-            <Image
-              style={{
-                width: 120,
-                height: 120,
-                padding: 0,
-                justifyContent: "center",
-              }}
-              source={{
-                uri: `https://openweathermap.org/img/wn/${image}@2x.png`,
-              }}
+          <View style={styles.child}>
+            <SearchBar
+              handleInput={this.handleInput}
+              handleSearch={this.handleSearch}
+              enteredLocation={enteredLocation}
             />
-            <Text style={styles.location}>{kelvinChecker(temperature)}˚C</Text>
+
+            {searched ? (
+              <View style={styles.locationContainer}>
+                <Text style={styles.location}>{newLocation} </Text>
+              </View>
+            ) : (
+              <View style={styles.locationContainer}>
+                <Text style={styles.headerText}>{currentLocation} </Text>
+              </View>
+            )}
+            <View style={styles.headerContainer}>
+              <Image
+                style={{
+                  width: 120,
+                  height: 120,
+                  padding: 0,
+                  justifyContent: "center",
+                }}
+                source={{
+                  uri: `https://openweathermap.org/img/wn/${image}@2x.png`,
+                }}
+              />
+              <Text style={styles.location}>
+                {kelvinChecker(temperature)}˚C
+              </Text>
+            </View>
+
+            <WeatherBody
+              handleCurrentWeather={this.handleCurrentWeather}
+              weatherCondition={weatherCondition}
+              weatherDescription={weatherDescription}
+              allWeatherInfo={allWeatherInfo}
+              sunInfo={sunInfo}
+            />
+
+            {searched ? (
+              <View>
+                <Button
+                  title="Back to current weather"
+                  onPress={this.handleCurrentWeather}
+                ></Button>
+              </View>
+            ) : (
+              <View>
+                <Text></Text>
+              </View>
+            )}
           </View>
-
-          <WeatherBody
-            handleCurrentWeather={this.handleCurrentWeather}
-            weatherCondition={weatherCondition}
-            weatherDescription={weatherDescription}
-            allWeatherInfo={allWeatherInfo}
-            sunInfo={sunInfo}
-          />
-
-          {searched ? (
-            <View>
-              <Button
-                title="Back to current weather"
-                onPress={this.handleCurrentWeather}
-              ></Button>
-            </View>
-          ) : (
-            <View>
-              <Text></Text>
-            </View>
-          )}
         </ImageBackground>
       </View>
     );
@@ -204,6 +208,10 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     // resizeMode: "cover",
+  },
+  child: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
   },
   searchbar: {
     padding: 0,
@@ -221,15 +229,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 7.5,
     flex: 1,
-    backgroundColor: "rgba(52, 52, 52, 0.8)",
   },
   location: {
     flex: 2,
     alignItems: "center",
     justifyContent: "flex-start",
     fontSize: 44,
-    color: "black",
+    color: "white",
     backgroundColor: "transparent",
+    // fontFamily: "sans-serif",
+    // fontWeight: "900",
+    // fontFamily: "Chewy-Regular",
+    fontWeight: "bold",
   },
   locationContainer: {
     flex: 2,
@@ -239,12 +250,15 @@ const styles = StyleSheet.create({
   headerContainer: {
     flex: 3,
     alignItems: "center",
+
     // justifyContent: "center",
   },
   headerText: {
     fontSize: 40,
-    color: "black",
+    color: "white",
     flex: 3,
+    fontFamily: "sans-serif",
+    fontWeight: "900",
   },
   bodyContainer: {
     flex: 4,
@@ -258,11 +272,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    color: "black",
+    color: "white",
   },
   subtitle: {
     fontSize: 24,
-    color: "black",
+    color: "white",
   },
 });
 
