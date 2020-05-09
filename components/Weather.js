@@ -1,17 +1,11 @@
 import React, { Component, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Button,
-  ImageBackground,
-} from "react-native";
+import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 import { API_KEY } from "../utils/WeatherApiKey.js";
 import SearchBar from "../components/SearchBar.js";
 import * as api from "../api.js";
 import { kelvinChecker } from "../utils/KelvinChecker.js";
 import WeatherBody from "./WeatherBody.js";
+import { Button } from "react-native-elements";
 
 class Weather extends Component {
   state = {
@@ -158,12 +152,7 @@ class Weather extends Component {
             )}
             <View style={styles.headerContainer}>
               <Image
-                style={{
-                  width: 120,
-                  height: 120,
-                  padding: 0,
-                  justifyContent: "center",
-                }}
+                style={styles.image}
                 source={{
                   uri: `https://openweathermap.org/img/wn/${image}@2x.png`,
                 }}
@@ -190,7 +179,7 @@ class Weather extends Component {
               </View>
             ) : (
               <View>
-                <Text></Text>
+                <Text> </Text>
               </View>
             )}
           </View>
@@ -203,11 +192,16 @@ class Weather extends Component {
 const styles = StyleSheet.create({
   weatherContainer: {
     flex: 1,
-    // resizeMode: "cover",
   },
   backgroundImage: {
     flex: 1,
-    // resizeMode: "cover",
+  },
+  image: {
+    width: 120,
+    height: 120,
+    padding: 0,
+    alignItems: "center",
+    justifyContent: "center",
   },
   child: {
     flex: 1,
@@ -215,14 +209,7 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     padding: 0,
-    // backgroundColor: "transparent",
   },
-  // background: {
-  //   flex: 1,
-  //   resizeMode: "cover",
-  //   justifyContent: "center",
-  //   flexDirection: "column",
-  // },
   inputContainer: {
     width: "80%",
     borderColor: "white",
@@ -237,9 +224,8 @@ const styles = StyleSheet.create({
     fontSize: 44,
     color: "white",
     backgroundColor: "transparent",
-    // fontFamily: "sans-serif",
-    // fontWeight: "900",
-    // fontFamily: "Chewy-Regular",
+    fontFamily: "sans-serif",
+    fontWeight: "900",
     fontWeight: "bold",
   },
   locationContainer: {
@@ -250,11 +236,9 @@ const styles = StyleSheet.create({
   headerContainer: {
     flex: 3,
     alignItems: "center",
-
-    // justifyContent: "center",
   },
   headerText: {
-    fontSize: 40,
+    fontSize: 44,
     color: "white",
     flex: 3,
     fontFamily: "sans-serif",

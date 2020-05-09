@@ -1,6 +1,8 @@
 import React from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { Button } from "react-native-elements";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const SearchBar = (props) => {
   return (
@@ -13,7 +15,11 @@ const SearchBar = (props) => {
           value={props.enteredLocation}
           onChangeText={(location) => props.handleInput(location)}
         />
-        <Button title="Search" onPress={props.handleSearch} />
+        <Button
+          title="Search"
+          icon={<Icon name="arrow-right" size={15} color="white" />}
+          onPress={props.handleSearch}
+        />
       </View>
     </View>
   );

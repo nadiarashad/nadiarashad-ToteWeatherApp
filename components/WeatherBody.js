@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, Button } from "react-native";
 import { kelvinChecker } from "../utils/KelvinChecker.js";
-import moment from "moment";
-import * as Font from "expo-font";
+import { secondsToLocalTime } from "../utils/SecondsToLocalTime";
 
 const WeatherBody = (props) => {
   let ts = new Date();
@@ -24,10 +23,10 @@ const WeatherBody = (props) => {
         Max temp: {kelvinChecker(props.allWeatherInfo.temp_max)}˚C
       </Text>
       <Text style={styles.subtitle}>
-        Sunrise: {ts.toLocaleTimeString(props.sunInfo.sunrise)}
+        Sunrise: {secondsToLocalTime(props.sunInfo.sunrise)}
       </Text>
       <Text style={styles.subtitle}>
-        Sunset: {ts.toLocaleTimeString(props.sunInfo.sunset)}
+        Sunset: {secondsToLocalTime(props.sunInfo.sunset)}
       </Text>
     </View>
   );
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   title: {
-    fontSize: 40,
+    fontSize: 36,
 
     fontFamily: "sans-serif",
     color: "white",
