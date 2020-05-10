@@ -16,6 +16,7 @@ import { Button } from "react-native-elements";
 import Carousel from "react-native-snap-carousel";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
+import { secondsToLocalTime } from "../utils/SecondsToLocalTime";
 
 class Weather extends Component {
   state = {
@@ -30,7 +31,6 @@ class Weather extends Component {
     searched: false,
     isLoading: true,
     currentLocation: "",
-    sunInfo: "",
     activeIndex: 0,
     carouselItems: [],
   };
@@ -86,6 +86,15 @@ class Weather extends Component {
             {
               windSpeed: "Wind speed: " + json.wind.speed + " mph",
             },
+            {
+              location: "Location: " + json.name,
+            },
+            {
+              sunrise: "Sunrise: " + secondsToLocalTime(json.sys.sunrise),
+            },
+            {
+              sunset: "Sunset: " + secondsToLocalTime(json.sys.sunset),
+            },
           ],
         });
       })
@@ -108,19 +117,24 @@ class Weather extends Component {
       .then((data) => {
         this.setState({
           temperature: data.main.temp,
-          weatherCondition: data.weather[0].main,
-          allWeatherInfo: data.main,
           newLocation: data.name,
           isLoading: false,
-          weatherDescription: data.weather[0].weatherDescription,
           image: data.weather[0].icon,
           enteredLocation: "",
           searched: true,
-          sunInfo: data.sys,
           carouselItems: [
             ...this.state.carouselItems,
             {
               weatherDescription: "Currently: " + data.weather[0].description,
+            },
+            {
+              location: "Location: " + data.name,
+            },
+            {
+              sunrise: "Sunrise: " + secondsToLocalTime(data.sys.sunrise),
+            },
+            {
+              sunset: "Sunset: " + secondsToLocalTime(data.sys.sunset),
             },
             {
               max_temp: "Max Temp: " + kelvinChecker(data.main.temp_max) + "˚C",
@@ -151,10 +165,10 @@ class Weather extends Component {
     this.setState({ enteredLocation: locationToSearch });
   };
 
-  //this function will invoke fetchNewLocationWeather function to fetch all of the new location weather
+  //this function will invoke fetchNewLocationWeather function to fetch all of the new location weather and reset the carousel data to an empty array
   handleSearch = () => {
     const { enteredLocation } = this.state;
-
+    this.setState({ carouselItems: [] });
     this.fetchNewLocationWeather(enteredLocation);
   };
 
@@ -163,7 +177,8 @@ class Weather extends Component {
     this.setState({ searched: false });
   };
 
-  _renderItem({ item, index }) {
+  //this function renders the display for the carousel
+  renderItem = ({ item, index }) => {
     return (
       <View
         style={{
@@ -180,26 +195,23 @@ class Weather extends Component {
         <Text style={styles.subtitle}>{item.max_temp}</Text>
         <Text style={styles.subtitle}>{item.windSpeed}</Text>
         <Text style={styles.subtitle}>{item.humidity}</Text>
+        <Text style={styles.subtitle}>{item.location}</Text>
+        <Text style={styles.subtitle}>{item.sunrise}</Text>
+        <Text style={styles.subtitle}>{item.sunset}</Text>
       </View>
     );
-  }
+  };
 
   render() {
     const {
       enteredLocation,
       searched,
       temperature,
-      weatherCondition,
       image,
       newLocation,
       currentLocation,
-      weatherDescription,
-      allWeatherInfo,
       isLoading,
-      sunInfo,
     } = this.state;
-
-    // console.log("STATEEEEEEEEEEEEEEEEEEEEEEEE", this.state.sunInfo);
 
     return (
       <View style={styles.weatherContainer}>
@@ -241,16 +253,16 @@ class Weather extends Component {
                   this.carousel._snapToItem(this.state.activeIndex - 1)
                 }
               >
-                <EvilIcons name="arrow-left" size={24} color="black" />
+                <EvilIcons name="arrow-left" size={35} color="white" />
               </TouchableHighlight>
 
               <View>
                 <Carousel
                   ref={(ref) => (this.carousel = ref)}
                   data={this.state.carouselItems}
-                  sliderWidth={300}
-                  itemWidth={300}
-                  renderItem={this._renderItem}
+                  sliderWidth={280}
+                  itemWidth={280}
+                  renderItem={this.renderItem}
                   onSnapToItem={(index) =>
                     this.setState({ activeIndex: index })
                   }
@@ -261,7 +273,7 @@ class Weather extends Component {
                   this.carousel._snapToItem(this.state.activeIndex + 1)
                 }
               >
-                <EvilIcons name="arrow-right" size={24} color="black" />
+                <EvilIcons name="arrow-right" size={35} color="white" />
               </TouchableHighlight>
             </SafeAreaView>
 
@@ -365,7 +377,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   container: {
-    flex: 4,
+    flex: 5,
     backgroundColor: "transparent",
     alignItems: "center",
     flexDirection: "row",
