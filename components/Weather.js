@@ -377,13 +377,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   container: {
-    flex: 5,
+    flex: 4,
     backgroundColor: "transparent",
     alignItems: "center",
     flexDirection: "row",
     paddingLeft: 0,
-    textAlign: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
+    // height: "3%",
   },
 });
 
