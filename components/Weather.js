@@ -253,7 +253,7 @@ class Weather extends Component {
                   this.carousel._snapToItem(this.state.activeIndex - 1)
                 }
               >
-                <EvilIcons name="arrow-left" size={35} color="white" />
+                <EvilIcons name="arrow-left" size={29} color="white" />
               </TouchableHighlight>
 
               <View>
@@ -273,7 +273,7 @@ class Weather extends Component {
                   this.carousel._snapToItem(this.state.activeIndex + 1)
                 }
               >
-                <EvilIcons name="arrow-right" size={35} color="white" />
+                <EvilIcons name="arrow-right" size={29} color="white" />
               </TouchableHighlight>
             </SafeAreaView>
 

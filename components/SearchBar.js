@@ -2,7 +2,6 @@ import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Button } from "react-native-elements";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 const SearchBar = (props) => {
   return (
@@ -15,11 +14,7 @@ const SearchBar = (props) => {
           value={props.enteredLocation}
           onChangeText={(location) => props.handleInput(location)}
         />
-        <Button
-          title="Search"
-          // icon={<Icon name="arrow-right" size={15} color="white" />}
-          onPress={props.handleSearch}
-        />
+        <Button title="Search" onPress={props.handleSearch} />
       </View>
     </View>
   );
@@ -28,7 +23,6 @@ const SearchBar = (props) => {
 const styles = StyleSheet.create({
   searchbar: {
     padding: 40,
-    // backgroundColor: "transparent",
   },
 
   inputContainer: {
@@ -47,7 +41,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 48,
     color: "white",
-    // backgroundColor: "transparent",
   },
 });
 export default SearchBar;
