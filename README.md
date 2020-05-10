@@ -4,7 +4,7 @@ Welcome to my first attempt at a React Native application!
 
 This is a React-Native based weather App, it uses geo location to give the user their current location weather data and also allows the user to input a location of their choice to retrieve new data.
 
-The weather data (e.g. humidity, wind speed, sunrise and more)is displayed using the react-native-snap-carousel to avoid the user having to scroll through pages of content.
+The weather data (e.g. humidity, wind speed, sunrise and more) is displayed using the react-native-snap-carousel to avoid the user having to scroll through pages of content.
 
 The backend uses the Open Weather API, https://openweathermap.org/api.
 
