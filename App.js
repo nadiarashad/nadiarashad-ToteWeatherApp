@@ -1,6 +1,6 @@
 import React, { useState, Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Weather from "../nadiaToteWeather/components/Weather.js";
+import Weather from "./components/Weather";
 
 export default class App extends Component {
   state = {
