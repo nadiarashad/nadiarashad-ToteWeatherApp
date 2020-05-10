@@ -17,7 +17,7 @@ const SearchBar = (props) => {
         />
         <Button
           title="Search"
-          icon={<Icon name="arrow-right" size={15} color="white" />}
+          // icon={<Icon name="arrow-right" size={15} color="white" />}
           onPress={props.handleSearch}
         />
       </View>

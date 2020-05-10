@@ -1,11 +1,21 @@
 import React, { Component, useState } from "react";
-import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  SafeAreaView,
+  TouchableHighlight,
+} from "react-native";
 import { API_KEY } from "../utils/WeatherApiKey.js";
 import SearchBar from "../components/SearchBar.js";
 import * as api from "../api.js";
 import { kelvinChecker } from "../utils/KelvinChecker.js";
-import WeatherBody from "./WeatherBody.js";
 import { Button } from "react-native-elements";
+import Carousel from "react-native-snap-carousel";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 
 class Weather extends Component {
   state = {
@@ -21,6 +31,8 @@ class Weather extends Component {
     isLoading: true,
     currentLocation: "",
     sunInfo: "",
+    activeIndex: 0,
+    carouselItems: [],
   };
 
   componentDidMount() {
@@ -55,6 +67,26 @@ class Weather extends Component {
           weatherDescription: json.weather[0].description,
           image: json.weather[0].icon,
           sunInfo: json.sys,
+          carouselItems: [
+            ...this.state.carouselItems,
+            {
+              weatherDescription: "Currently: " + json.weather[0].description,
+            },
+            {
+              max_temp: "Max Temp: " + kelvinChecker(json.main.temp_max) + "˚C",
+            },
+            {
+              min_temp: "Min Temp: " + kelvinChecker(json.main.temp_min) + "˚C",
+            },
+            { humidity: "Humidity: " + json.main.humidity + "%" },
+            {
+              feelsLike:
+                "Feels like: " + kelvinChecker(json.main.feels_like) + "˚C",
+            },
+            {
+              windSpeed: "Wind speed: " + json.wind.speed + " mph",
+            },
+          ],
         });
       })
       .catch((err) => {
@@ -70,7 +102,7 @@ class Weather extends Component {
     api
       .fetchNewWeather(enteredLocation)
       .then((res) => {
-        // console.log("new location data", res.data);
+        console.log("new location data", res.data);
         return res.data;
       })
       .then((data) => {
@@ -85,6 +117,26 @@ class Weather extends Component {
           enteredLocation: "",
           searched: true,
           sunInfo: data.sys,
+          carouselItems: [
+            ...this.state.carouselItems,
+            {
+              weatherDescription: "Currently: " + data.weather[0].description,
+            },
+            {
+              max_temp: "Max Temp: " + kelvinChecker(data.main.temp_max) + "˚C",
+            },
+            {
+              min_temp: "Min Temp: " + kelvinChecker(data.main.temp_min) + "˚C",
+            },
+            { humidity: "Humidity: " + data.main.humidity + "%" },
+            {
+              feelsLike:
+                "Feels like: " + kelvinChecker(data.main.feels_like) + "˚C",
+            },
+            {
+              windSpeed: "Wind speed: " + data.wind.speed + " mph",
+            },
+          ],
         });
       })
       .catch((err) => {
@@ -111,6 +163,27 @@ class Weather extends Component {
     this.setState({ searched: false });
   };
 
+  _renderItem({ item, index }) {
+    return (
+      <View
+        style={{
+          flex: 4,
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        <MaterialCommunityIcons name="weather-cloudy" size={45} color="black" />
+        <Text style={styles.subtitle}>{item.weatherDescription}</Text>
+        <Text style={styles.subtitle}>{item.feelsLike}</Text>
+        <Text style={styles.subtitle}>{item.min_temp}</Text>
+        <Text style={styles.subtitle}>{item.max_temp}</Text>
+        <Text style={styles.subtitle}>{item.windSpeed}</Text>
+        <Text style={styles.subtitle}>{item.humidity}</Text>
+      </View>
+    );
+  }
+
   render() {
     const {
       enteredLocation,
@@ -126,7 +199,7 @@ class Weather extends Component {
       sunInfo,
     } = this.state;
 
-    console.log("STATEEEEEEEEEEEEEEEEEEEEEEEE", this.state.sunInfo);
+    // console.log("STATEEEEEEEEEEEEEEEEEEEEEEEE", this.state.sunInfo);
 
     return (
       <View style={styles.weatherContainer}>
@@ -162,13 +235,35 @@ class Weather extends Component {
               </Text>
             </View>
 
-            <WeatherBody
-              handleCurrentWeather={this.handleCurrentWeather}
-              weatherCondition={weatherCondition}
-              weatherDescription={weatherDescription}
-              allWeatherInfo={allWeatherInfo}
-              sunInfo={sunInfo}
-            />
+            <SafeAreaView style={styles.container}>
+              <TouchableHighlight
+                onPress={() =>
+                  this.carousel._snapToItem(this.state.activeIndex - 1)
+                }
+              >
+                <EvilIcons name="arrow-left" size={24} color="black" />
+              </TouchableHighlight>
+
+              <View>
+                <Carousel
+                  ref={(ref) => (this.carousel = ref)}
+                  data={this.state.carouselItems}
+                  sliderWidth={300}
+                  itemWidth={300}
+                  renderItem={this._renderItem}
+                  onSnapToItem={(index) =>
+                    this.setState({ activeIndex: index })
+                  }
+                />
+              </View>
+              <TouchableHighlight
+                onPress={() =>
+                  this.carousel._snapToItem(this.state.activeIndex + 1)
+                }
+              >
+                <EvilIcons name="arrow-right" size={24} color="black" />
+              </TouchableHighlight>
+            </SafeAreaView>
 
             {searched ? (
               <View>
@@ -193,6 +288,7 @@ const styles = StyleSheet.create({
   weatherContainer: {
     flex: 1,
   },
+
   backgroundImage: {
     flex: 1,
   },
@@ -261,6 +357,21 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 24,
     color: "white",
+    fontFamily: "sans-serif",
+    fontWeight: "bold",
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  container: {
+    flex: 4,
+    backgroundColor: "transparent",
+    alignItems: "center",
+    flexDirection: "row",
+    paddingLeft: 0,
+    textAlign: "center",
+    justifyContent: "space-around",
   },
 });
 
