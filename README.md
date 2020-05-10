@@ -1,6 +1,6 @@
 # nadiarashad-ToteWeatherApp
 
-Welcome to my first attempt at a React Native application!
+Welcome to my first attempt at a React Native application! Please run the app in the browser as that is what I used to test.
 
 This is a React-Native based weather App, it uses geo location to give the user their current location weather data and also allows the user to input a location of their choice to retrieve new data.
 
