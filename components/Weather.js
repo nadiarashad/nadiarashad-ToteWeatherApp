@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import {
   View,
   Text,
@@ -51,13 +51,12 @@ class Weather extends Component {
   }
 
   //using your location I make a call to the API & return and setState with the data
-  fetchWeather(lat, lon) {
+  fetchWeather = (lat, lon) => {
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=metric`
     )
       .then((res) => res.json())
       .then((json) => {
-        // console.log("json of all weather", json);
         this.setState({
           temperature: json.main.temp,
           weatherCondition: json.weather[0].main,
@@ -104,14 +103,13 @@ class Weather extends Component {
             err.message
         );
       });
-  }
+  };
 
   //I use the users input location to make an Axios request to the API, returning the location data and setting state
   fetchNewLocationWeather = (enteredLocation) => {
     api
       .fetchNewWeather(enteredLocation)
       .then((res) => {
-        console.log("new location data", res.data);
         return res.data;
       })
       .then((data) => {
