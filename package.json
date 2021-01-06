@@ -9,7 +9,7 @@
     "test": "mocha testing/spec.js"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "chai": "^4.2.0",
     "detox": "^16.4.1",
